@@ -1,0 +1,66 @@
+body{
+    font-family: "微软雅黑";
+    font-size: 12px;
+    margin: 5px;
+    padding: 5px;
+}
+
+li{
+    text-decoration: none;
+    display: block;
+    padding: 5px;
+}
+
+a{
+    text-decoration: none;
+    padding: 0;
+    margin: 0;
+}
+
+.player{
+    position: relative;
+
+}
+
+.function{
+    position: relative;
+    float: left;
+    width: 171px;
+    height: 100%;
+    background-color: rgb(190, 190, 240);
+}
+
+.function button{
+    border: 0;
+    background-color: rgba(255, 255, 255, 0);
+    cursor: pointer;
+}
+
+.list{
+    position: relative;
+    float: left;
+    width: 300px;
+    height: 100%;
+    background-color: rgb(245, 180, 211);
+}
+
+.lyrics{
+    position: relative;
+    float: left;
+    width: 400px;
+    height: 300px;
+    background-color: rgb(197, 182, 182);
+}
+
+
+.delete-song{
+    background: url("../images/delete.png") no-repeat 0px -300px;
+    margin: 5px;
+    cursor: pointer;
+}
+
+.add-song-into-list{
+    background: url("../images/delete.png") no-repeat -96px -288px;
+    margin: 5px;
+    cursor: pointer;
+}

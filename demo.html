@@ -1,0 +1,50 @@
+<!doctype html>
+<html>
+    <head> 
+        <meta charset="utf-8">
+        <title>audio</title>
+        <link rel="stylesheet" href="css/demo.css" />
+        <script src="script/utils.js"></script>
+        <script src="script/demo.js"></script>
+    </head>
+    <body>
+        <div id="player" class="player">
+            <button type="sumbit" id="lastSong">上一首</button>
+            <button type="sumbit" id="nextSong">下一首</button>
+            <audio controls autoplay id="audio">you can't use audio</audio>
+        </div>
+        <div id="function" class="function">
+            <ul>
+                <li>
+                    <button type="sumbit" id="defaultSongSheet" class="default-song-sheet">默认播放列表</button>
+                </li>
+                <li>
+                    <h2 id="mySongSheet" class="my-song-sheet">我的歌单</h2>
+                    <span id="showMySongSheet" class="show-my-song-sheet">显示歌单</span>
+                    <ul id="newSongSheet" class="new-song-sheet">
+                    </ul>
+                </li>
+                <li>
+                    <button type="sumbit" id="playMost" class="play-most">播放最多</button>
+                </li>
+                <li>
+                    <button type="sumbit" id="createSheet" class="create-sheet">创建歌表</button>
+                    
+                </li>
+            </ul>
+        </div>
+        <div id="list" class="list">
+            <form>
+            <input multiple accept="audio/*" type="file"  name="addSongs" id="addSongs"></input>
+            <input type="text" name="search" id="search" placeholder="搜索"></input>
+            <a href="#" id="searhButton" class="search-button">搜索</a>
+            <output id="outputlist"></output>
+            </form>
+            <ul id="songlist"></ul>
+        </div>
+        <div id="lyrics" class="lyrics">
+            歌词
+        </div>
+    </body>
+</html>
+
