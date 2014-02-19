@@ -26,13 +26,13 @@ a{
     position: relative;
     float: left;
     width: 171px;
-    height: 100%;
-    background-color: rgb(190, 190, 240);
+    height: 600px;
+    border-right: 2px solid #000;
 }
 
 .function button{
     border: 0;
-    background-color: rgba(255, 255, 255, 0);
+    background-color: #fff;
     cursor: pointer;
 }
 
@@ -41,7 +41,10 @@ a{
     float: left;
     width: 300px;
     height: 100%;
-    background-color: rgb(245, 180, 211);
+}
+
+.list a{
+    color: #3D3C3C;
 }
 
 .lyrics{

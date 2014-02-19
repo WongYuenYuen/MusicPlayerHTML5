@@ -7,12 +7,12 @@ function initPage(){
     document.getElementById("audio").onended = goOnPlay;
     document.getElementById("lastSong").onclick = playLastSong;
     document.getElementById("nextSong").onclick = playNextSong;
+    document.getElementById("controlSong").onclick = controlSong;
     
     //function div:
     document.getElementById("defaultSongSheet").onclick = openDefaultSongSheet;
-    document.getElementById("showMySongSheet").onclick = showMySongSheet;
+    document.getElementById("mySongSheet").onclick = showMySongSheet;
     document.getElementById("playMost").onclick = openPlayMostSheet;
-    document.getElementById("createSheet").onclick = createNewSheet;
 
 
     //list div:
@@ -36,9 +36,26 @@ function playLastSong(){
     console.log(lastSong);
     lastSong = lastSong[0].cloneNode(true);
     audio.replaceChild(lastSong, audio.childNodes[1]);
-
+    play();
 }
 
+function controlSong(){
+    var audio = document.getElementById("audio");
+    var playButton = document.getElementById("controlSong");
+    if(audio.paused  == true){
+        play();
+    }else{
+        playButton.innerHTML = "begin";
+        audio.pause();
+    }
+}
+
+function play(){
+    var audio = document.getElementById("audio");
+    var playButton = document.getElementById("controlSong");
+    playButton.innerHTML = "stop";
+    audio.play();
+}
 function playNextSong(){
     var audio = document.getElementById("audio");
     if(currentSongLi.nextSibling != undefined){
@@ -51,20 +68,19 @@ function playNextSong(){
     console.log(nextSong);
     nextSong = nextSong[0].cloneNode(true);
     audio.replaceChild(nextSong, audio.childNodes[1]);
-    audio.play();
+    play();
 }
 
-function sendAddSongRequest(songsJson){
+function sendAddSongRequest(song_id, src, name){
     var addSongRequest = createRequest();
     console.log("first step");
     if(addSongRequest == null){
         console.log("add song request send failed");
     }else{
-        var url = "php/addSong.php?songsJson=" + songsJson;
-//        var url = "php/addSong.php?name=aaa";
+        var url = "php/addSong.php?song_id=" + song_id + "&src=" + src + "&name=" + name;
         addSongRequest.onreadystatechange = function (){
             if(addSongRequest.readyState == 4 && addSongRequest.status == 200){
-               // console.log(addSongRequest.responseText);
+                console.log("responseText: " + addSongRequest.responseText);
             }
         };
         addSongRequest.open("POST", url, true);
@@ -94,9 +110,8 @@ function addSongOperation(song_id,src,fileName){
             console.log("currentSong: " + audio.childNodes[0]);
             var currentSong = audio.childNodes[1];
             audio.replaceChild(newSong,currentSong);
-            audio.play();
         }
-
+        play();
     };
 
     var addSongTag = document.createElement("span");
@@ -145,23 +160,39 @@ function handleFileSelect(evt){
     songs = [];
 
     for(var i =0,f; f= files[i]; i++){
-        var reader = new FileReader();
-        reader.onload = (function (theFile){
-            return function(e){
+       var songURL = "";
+       try{
+           var file = null;
+           if(evt.target.files && evt.target.files[i]){
+               file = evt.target.files[i];
+           }else if(evt.target.files && evt.target.files.item(i)){
+               file = evt.target.files.item(i);
+           }
+           //Firefox 因安全性问题已无法直接通过input[file].value 获取完整的文件路径
+           try{
+               //Firefox7.0
+               songURL = file.getAsDataURL();
+               console.log("Firefox7" + songURL);
+           }catch(e){
+               //Firefox8.0 later
+               songURL = window.URL.createObjectURL(file);
+               console.log("Firefox8" + songURL);
+           }
+       }catch(e){
+           //支持html5的浏览器,比如高版本的firefox、chrome、ie10
+           if(evt.target.files && evt.target.files[i]){
+               var reader = new FileReader();
+               reader.onload = function (e){
+                   songURL = e.target.result;
+                   console.log("chrome: " + songURL);
+               };
+               reader.readAsDataURL(evt.target.files[i]);
+           }
+       }
                 var song_id = "song_" + (songTotal + 1);
-                var song = {};
-                song["id"] = song_id;
-                //song["src"] = e.target.result;
-                song["name"] = theFile.name;
-                songs.push(song);
-                addSongOperation(song_id, e.target.result, theFile.name);
-                console.log(song);
-                song = JSON.stringify(song);
-                console.log(song);
-                sendAddSongRequest(song);
-            };
-        })(f);
-        reader.readAsDataURL(f);
+                songTotal ++;
+                addSongOperation(song_id, songURL, evt.target.files[i].name);
+                sendAddSongRequest(song_id, songURL, evt.target.files[i].name);
     }
 }
 
@@ -178,7 +209,7 @@ function openDefaultSongSheet(){
             if(openDefaultRequest.readyState == 4 && openDefaultRequest.status == 200){
                 var json = openDefaultRequest.responseText;
                 json = JSON.parse(json);
-                console.log(json.length);
+                console.log(json);
                 for(var i = 0; i<json.length; i++){
                     addSongOperation(json[i].song_id, json[i].src, json[i].name);
                 }

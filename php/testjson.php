@@ -1,5 +1,5 @@
 <?php 
-$jarr=array( 
+/*$jarr=array( 
 array(
 'song_id' =>  1, 
 'src'=>'001', 
@@ -19,7 +19,19 @@ array(
 
 
 ); 
+ */
 
+$mongo = new Mongo();
+
+$collection = $mongo->MusicPlayer->defaultSheet;
+$data = $collection->find();
+$all = array();
+foreach($data as $value){
+    array_push($all, array('song_id' => $value["song_id"],'name' => $value["name"], 'src' => $value["src"]));
+}
+
+echo JSON($all);
+$mongo->close();
 function arrayRecursive(&$array, $function, $apply_to_keys_also = false){
     static $recursive_counter = 0;
     if (++$recursive_counter > 1000) {
@@ -48,6 +60,15 @@ function JSON($array) {
     $json = json_encode($array);
     return urldecode($json);
 }                                                                 
-echo JSON($jarr);
+
+//echo JSON($jarr);
+
+/*$length = count($jarr);
+for($i = 0; $i < $length; $i ++){
+    echo $jarr[$i]["song_id"];
+    echo $jarr[$i]["name"];
+    echo $jarr[$i]["src"];
+}
+ */
 ?>
 

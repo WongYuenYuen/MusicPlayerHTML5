@@ -10,7 +10,12 @@
     <body>
         <div id="player" class="player">
             <button type="sumbit" id="lastSong">上一首</button>
+            <button type="sumbit" id="controlSong">播放</button>
             <button type="sumbit" id="nextSong">下一首</button>
+            <span id="playingBlur"></span>
+            <p id="time"></p>
+            <button type="sumbit" id="slienct">静音</button>
+            
             <audio controls autoplay id="audio">you can't use audio</audio>
         </div>
         <div id="function" class="function">
@@ -19,17 +24,16 @@
                     <button type="sumbit" id="defaultSongSheet" class="default-song-sheet">默认播放列表</button>
                 </li>
                 <li>
-                    <h2 id="mySongSheet" class="my-song-sheet">我的歌单</h2>
-                    <span id="showMySongSheet" class="show-my-song-sheet">显示歌单</span>
+                    <button type="sumbit" id="mySongSheet" class="my-song-sheet">我的歌单</button>
                     <ul id="newSongSheet" class="new-song-sheet">
+                        <li><button type="sumbit" id="1">1</button></li>
+                        <li><button type="sumbit" id="2">2</button></li>
+                        <li><button type="sumbit" id="3">3</button></li>
                     </ul>
                 </li>
                 <li>
                     <button type="sumbit" id="playMost" class="play-most">播放最多</button>
-                </li>
-                <li>
-                    <button type="sumbit" id="createSheet" class="create-sheet">创建歌表</button>
-                    
+                    <ul id="playMostList"></ul>
                 </li>
             </ul>
         </div>
