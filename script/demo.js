@@ -71,24 +71,6 @@ function playNextSong(){
     play();
 }
 
-function sendAddSongRequest(song_id, src, name){
-    var addSongRequest = createRequest();
-    console.log("first step");
-    if(addSongRequest == null){
-        console.log("add song request send failed");
-    }else{
-        var url = "php/addSong.php?song_id=" + song_id + "&src=" + src + "&name=" + name;
-        addSongRequest.onreadystatechange = function (){
-            if(addSongRequest.readyState == 4 && addSongRequest.status == 200){
-                console.log("responseText: " + addSongRequest.responseText);
-            }
-        };
-        addSongRequest.open("POST", url, true);
-        addSongRequest.send(null);
-    }
-  console.log("out the sendadd");
-}
-
 function addSongOperation(song_id,src,fileName){
     var audio = document.getElementById("audio");
     var songList = document.getElementById("songlist");
@@ -126,26 +108,8 @@ function addSongOperation(song_id,src,fileName){
     deleteTag.className = "delete-song";
     deleteTag.onclick = function (event){
         console.log(event.srcElement.parentNode);
-        deleteSongRequest = createRequest();
-        if(deleteSongRequest == null){
-            console.log("发送请求失败！");
-        }else{
-            var url = "php/deletejson.php?song_id=" + event.srcElement.id.substr(5);
-            deleteSongRequest.onreadystatechange = function (){
-                if(deleteSongRequest.readyState == 4 && deleteSongRequest.status == 200){
-                    if(deleteSongRequest.responseText == "okay"){
-                        songlist.removeChild(event.srcElement.parentNode); 
-                        console.log("delete song !");
-                    }else{
-                        console.log("delete failed!");
-                    }
-                }
-            };
-            deleteSongRequest.open("GET", url, true);
-            deleteSongRequest.send(null);
-        }
-    }
-
+        songlist.removeChild(event.srcElement.parentNode); 
+    } 
     var li = document.createElement("li");
     li.className = "";
     li.appendChild(a);
@@ -154,72 +118,19 @@ function addSongOperation(song_id,src,fileName){
     songlist.appendChild(li);
 }
 
-function handleFileSelect(evt){
+function handleFileSelect(obj){ //获取文件的路径和文件名
     var audio = document.getElementById("audio");
-    var files = evt.target.files;
-    songs = [];
+    var files = obj.target.files;
 
     for(var i =0,f; f= files[i]; i++){
-       var songURL = "";
-       try{
-           var file = null;
-           if(evt.target.files && evt.target.files[i]){
-               file = evt.target.files[i];
-           }else if(evt.target.files && evt.target.files.item(i)){
-               file = evt.target.files.item(i);
-           }
-           //Firefox 因安全性问题已无法直接通过input[file].value 获取完整的文件路径
-           try{
-               //Firefox7.0
-               songURL = file.getAsDataURL();
-               console.log("Firefox7" + songURL);
-           }catch(e){
-               //Firefox8.0 later
-               songURL = window.URL.createObjectURL(file);
-               console.log("Firefox8" + songURL);
-           }
-       }catch(e){
-           //支持html5的浏览器,比如高版本的firefox、chrome、ie10
-           if(evt.target.files && evt.target.files[i]){
-               var reader = new FileReader();
-               reader.onload = function (e){
-                   songURL = e.target.result;
-                   console.log("chrome: " + songURL);
-               };
-               reader.readAsDataURL(evt.target.files[i]);
-           }
-       }
-                var song_id = "song_" + (songTotal + 1);
-                songTotal ++;
-                addSongOperation(song_id, songURL, evt.target.files[i].name);
-                sendAddSongRequest(song_id, songURL, evt.target.files[i].name);
+        var songURL = obj.target.files[i].path;
+        var song_id = "song_" + (songTotal + 1);
+        songTotal ++;
+        addSongOperation(song_id, songURL, obj.target.files[i].name);
     }
 }
 
 function openDefaultSongSheet(){
-    var openDefaultRequest = createRequest();
-    if(openDefaultRequest == null){
-        console.log ("Unable to openDefaultSongSheetRequest object");
-    }else {
-        console.log ("Got the openDefaultSongSheetRequest object.");
-        var url = "php/testjson.php";
-
-        openDefaultRequest.onreadystatechange = function (){
-            var audio = document.getElementById("audio");
-            if(openDefaultRequest.readyState == 4 && openDefaultRequest.status == 200){
-                var json = openDefaultRequest.responseText;
-                json = JSON.parse(json);
-                console.log(json);
-                for(var i = 0; i<json.length; i++){
-                    addSongOperation(json[i].song_id, json[i].src, json[i].name);
-                }
-                songTotal = json.length;
-            };
-        }
-        openDefaultRequest.open("POST", url, true);
-        openDefaultRequest.send(null);
-        console.log("openDefaultRequest");
-    }
 }
 
 function showMySongSheet(){
