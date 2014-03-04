@@ -1,8 +1,9 @@
 window.onload = initPage;
 var currentSongLi;
-var songTotal = 1;
+var songTotal = 20;
 
 function initPage(){
+    initDb();
     //player div:
     document.getElementById("audio").onended = goOnPlay;
     document.getElementById("lastSong").onclick = playLastSong;
@@ -17,9 +18,14 @@ function initPage(){
 
     //list div:
     addEventHandler(document.getElementById('addSongs'),'change', handleFileSelect);
-    openDefaultSongSheet();
 }
 
+
+function Song(id, name, src){
+    this.song_id = id;
+    this.name = name;
+    this.src = src;
+}
 function goOnPlay(){
     var audio = document.getElementById("audio");
     if(audio.ended == true) playNextSong();
@@ -71,15 +77,15 @@ function playNextSong(){
     play();
 }
 
-function addSongOperation(song_id,src,fileName){
+function addSongOperation(songData){
     var audio = document.getElementById("audio");
     var songList = document.getElementById("songlist");
     var source = document.createElement("source");
-    source.src = src;
-    source.id = song_id;
+    source.src = songData.src;
+    source.id = songData.id;
 
     var a = document.createElement("a");
-    a.innerHTML = fileName;
+    a.innerHTML = songData.name;
     a.href = "#";
     a.appendChild(source);
     a.onclick = function (event){
@@ -104,11 +110,17 @@ function addSongOperation(song_id,src,fileName){
 
     var deleteTag = document.createElement("span");
     deleteTag.innerHTML = "&nbsp;&nbsp;&nbsp;";
-    deleteTag.id = "list_" + song_id.substr(5);
+    console.log(songData);
+    console.log(songData.song_id);
+    console.log(songData.name);
+    deleteTag.id = "list_" + songData.song_id.substr(5);
     deleteTag.className = "delete-song";
     deleteTag.onclick = function (event){
         console.log(event.srcElement.parentNode);
+        console.log(event.srcElement.id);
         songlist.removeChild(event.srcElement.parentNode); 
+        var delete_id = "song_" + event.srcElement.id.substr(5);
+        deleteSong(delete_id);
     } 
     var li = document.createElement("li");
     li.className = "";
@@ -120,17 +132,23 @@ function addSongOperation(song_id,src,fileName){
 
 function handleFileSelect(obj){ //获取文件的路径和文件名
     var audio = document.getElementById("audio");
+    var songData = new Song();
     var files = obj.target.files;
-
     for(var i =0,f; f= files[i]; i++){
-        var songURL = obj.target.files[i].path;
-        var song_id = "song_" + (songTotal + 1);
+        songData.song_id = "song_" + (songTotal + 1);
+        songData.name = obj.target.files[i].name;
+        songData.src = obj.target.files[i].path;
+        addSong2Sheet(songData);
+        console.log(songData);
         songTotal ++;
-        addSongOperation(song_id, songURL, obj.target.files[i].name);
+        console.log("writ into the file");
+
+        addSongOperation(songData);
     }
 }
 
 function openDefaultSongSheet(){
+    loadDefaultSheet();
 }
 
 function showMySongSheet(){
