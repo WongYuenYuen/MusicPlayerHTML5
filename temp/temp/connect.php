@@ -1,0 +1,16 @@
+<?php
+$data = array('song_id'=>'1','src'=>'aaa','name'=>'shara');
+
+$mongo = new Mongo();
+$a = $mongo->selectDB('newDB');
+
+
+echo "ok";
+if($a){
+    echo "success";
+}else{
+    echo "wrong";
+}
+
+echo "<br />"
+?>

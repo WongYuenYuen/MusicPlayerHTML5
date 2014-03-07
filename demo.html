@@ -10,13 +10,20 @@
     </head>
     <body>
         <div id="player" class="player">
-            <button type="sumbit" id="lastSong">上一首</button>
-            <button type="sumbit" id="controlSong">播放</button>
-            <button type="sumbit" id="nextSong">下一首</button>
-            <span id="playingBlur"></span>
-            <p id="time"></p>
-            <button type="sumbit" id="slienct">静音</button>
+            <button type="sumbit" id="lastSong" class="last-song">上一首</button>
+            <button type="sumbit" id="controlSong" class="control-song">播放</button>
+            <button type="sumbit" id="nextSong" class="next-song">下一首</button>
+            <button type="submit" id="playMode" class="play-mode">循环</button>
+            <div id="seekBar" class="seek-bar">
+                <div id="playBar" class="play-bar"></div>
+            </div>
+            <p id="currentTime"></p>
+            <p id="totalTime"></p>
             
+            <button type="sumbit" id="slienct">静音</button>
+            <div id="volumeBar" class="volume-bar">
+                <div id="volumeBarValue" class="volume-bar-value"></div>
+            </div>           
             <audio controls autoplay id="audio">you can't use audio</audio>
         </div>
         <div id="function" class="function">
